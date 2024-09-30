@@ -14,4 +14,6 @@
   <script setup>
   import { ref } from 'vue'
   
+  //const dataTwice = await $fetch('http://127.0.0.1:8000/get/eventos')
+  //console.log(dataTwice)
   </script>

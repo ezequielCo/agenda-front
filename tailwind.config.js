@@ -25,6 +25,7 @@ export default {
       'gris-oscuro': '#273444',
       gris: '#8492a6',
       'gris-claro': '#d3dce6',
+      'gris-claro-100':'#F9F9F9'
       
     },
     fontFamily: {
