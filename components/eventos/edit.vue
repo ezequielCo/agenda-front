@@ -1,10 +1,16 @@
 <template>
-    <div class="">
-        <button @click="isOpen = true" 
-        class="bg-azul hover:bg-green-600 text-white font-bold py-2 px-4 rounded">
-          Abrir Modal
-        </button>
-    <TransitionRoot appear :show="isOpen" as="template">
+    <div  class="flotar">
+     
+    <button  @click="openDialog(id)"   class='bg-azul rounded-full p-2 shadow-xl'> 
+        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor" class="size-6">
+  <path d="M21.731 2.269a2.625 2.625 0 0 0-3.712 0l-1.157 1.157 3.712 3.712 1.157-1.157a2.625 2.625 0 0 0 0-3.712ZM19.513 8.199l-3.712-3.712-8.4 8.4a5.25 5.25 0 0 0-1.32 2.214l-.8 2.685a.75.75 0 0 0 .933.933l2.685-.8a5.25 5.25 0 0 0 2.214-1.32l8.4-8.4Z" />
+  <path d="M5.25 5.25a3 3 0 0 0-3 3v10.5a3 3 0 0 0 3 3h10.5a3 3 0 0 0 3-3V13.5a.75.75 0 0 0-1.5 0v5.25a1.5 1.5 0 0 1-1.5 1.5H5.25a1.5 1.5 0 0 1-1.5-1.5V8.25a1.5 1.5 0 0 1 1.5-1.5h5.25a.75.75 0 0 0 0-1.5H5.25Z" />
+</svg>
+
+
+    </button >
+ </div>
+ <TransitionRoot appear :show="isOpen" as="template">
       <Dialog as="div" @close="isOpen = false" class="relative z-10">
         <TransitionChild
           as="template"
@@ -48,7 +54,7 @@
               </div>
               <div  v-if="FormDisamble" class="">
               <DialogTitle as="h3" class="text-lg font-bold leading-6 text-gray-900">
-                  <h4 class="text-2xl font-bold text-gray-800 mb-4">Crear Nuevo Evento</h4>
+                  <h4 class="text-2xl font-bold text-gray-800 mb-4">Editar Evento </h4>
                   
                 </DialogTitle>
                 <form   @submit.prevent="submitForm" class="p-6 space-y-6">
@@ -57,11 +63,13 @@
                 
                   <div  >
                     <label for="eventName" class="block text-sm font-medium text-gray-700">Nombre del Evento</label>
+                   
                     <input
                       v-model="eventName"
                       type="text"
                       id="eventName"
                       name="eventName"
+                      
                       required
                       class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-300 focus:ring focus:ring-indigo-200 focus:ring-opacity-50"
                       placeholder="Ej: Conferencia de Vue.js"
@@ -153,13 +161,20 @@
           </div>
         </div>
       </Dialog>
-    </TransitionRoot>
-</div>
+</TransitionRoot>
+
   </template>
   
   <script setup>
   import { ref } from 'vue'
   import { Dialog, DialogPanel, DialogTitle, TransitionChild, TransitionRoot } from '@headlessui/vue'
+  
+  defineProps({
+  id: {
+    type: Number,
+    required: true
+  }
+})
   
   const isOpen = ref(false)
   const FormDisamble = ref(true)
@@ -172,9 +187,37 @@
   const eventTime = ref('')
   const msga = ref('')
   const Id ='';
-
   const router =useRouter()
+
+  async function openDialog(id) {
+  isOpen.value = true;
+
+  try {
+    const response = await fetch(`http://127.0.0.1:8000/evento/${id}`);
+    
+    if(response.status == '200')
+    {
+      const data = await response.json();
+      //obtendo los valores que corresponden al campo
+      eventName.value = data.evento;
+      description.value =data.description
+      eventDate.value = data.fecha_evento
+      eventTime.value = data.hora_evento
+
+    }else
+    {
+      console.error('Se ha presentado un error , por favor verifique', error);
+    }
+    
+    
+   // console.log(data)
+  } catch (error) {
+    console.error('Error al obtener el evento:', error);
+    // Mostrar un mensaje de error al usuario
+  }
+}
   
+    
   const submitForm = async () => {
     try {
       isLoading.value = true

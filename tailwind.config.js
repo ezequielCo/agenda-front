@@ -16,6 +16,9 @@ export default {
     colors: {
       azul: '#1fb6ff',
       'azul-claro':'#BAE1FF',
+      'blue-success':'#a2f9ff',
+      'red-errors':'#ff8686',
+      'yellow-warnnig':'#fffd83',
       purpura: '#7e5bef',
       rosado: '#ff49db',
       naranaja: '#ff7849',

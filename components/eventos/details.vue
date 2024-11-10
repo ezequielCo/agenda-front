@@ -1,8 +1,10 @@
 <template>
 
           <h2 class="text-2xl font-bold mb-4 text-gray-800">Detalles del Evento</h2>
+          <edit  :id="id"></edit>
           <div v-if="evento"  class="space-y-4">
             <div>
+               
               <h3 class="text-lg font-semibold text-gray-700">Nombre del Evento</h3>
               <p class="text-gray-600">{{ evento.evento }}</p>
             </div>
@@ -26,6 +28,7 @@
         
 </template>
 <script setup>
+import edit from './edit.vue';
 const { id } =  useRoute().params;
 
 
