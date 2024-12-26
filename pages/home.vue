@@ -3,8 +3,6 @@
       <div class="bg-white rounded-lg shadow-md w-full max-w-md p-6">
         
         <h1 class="text-2xl font-bold text-gray-800 mb-4 text-center">Lista de Tareas</h1>
-      
-
         <Modal></Modal>
         <Events></Events>
       </div>

@@ -38,6 +38,14 @@ export const useAuthStore = defineStore('auth', {
       this.isAuthenticated = true
       localStorage.setItem('isAuthenticated', this.isAuthenticated);
     },
+    login() {
+      this.token = token;
+      this.user = user;
+      this.isAuthenticated = true;
+      localStorage.setItem('access_token', token);
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('isAuthenticated', 'true');
+    },
     loadAuthState() {
       const isAuthenticated = localStorage.getItem('isAuthenticated') == true
       this.isAuthenticated = isAuthenticated
@@ -45,6 +53,7 @@ export const useAuthStore = defineStore('auth', {
     },
     setToken(token) {
       this.token = token
+      this.isAuthenticated = true;
       sessionStorage.setItem('access_token', this.token);
         // saveTokenToStorage(token)
     },
@@ -52,19 +61,8 @@ export const useAuthStore = defineStore('auth', {
       this.user = null
       this.token =   localStorage.getItem('access_token')
       this.isAuthenticated = false
+      
     
-    
-      //  console.log(localStorage.getItem('access_token'));
-
-    
-    /* localStorage.removeItem('access_token');
-     localStorage.removeItem('token');
-     localStorage.removeItem('authenticated');
-       localStorage.removeItem('isAuthenticated');
-     localStorage.removeItem('user');
-     router.push("/login");*/
-
-
            $fetch('http://127.0.0.1:8000/auth/logout', {
              method: 'POST',
             headers: { Authorization: `Bearer ${this.token}` }
@@ -84,9 +82,10 @@ export const useAuthStore = defineStore('auth', {
      
     },
     async verifyToken() {
-      if (!this.token) {
-        this.isAuthenticated = false
-        return
+      const token = localStorage.getItem('access_token');
+      if (!token) {
+        this.isAuthenticated = false;
+        return;
       }
 
       try {
@@ -98,12 +97,13 @@ export const useAuthStore = defineStore('auth', {
              // console.log('consolete',respuesta);
           if (respuesta) {
 
-          //  console.log('Respuesta de usario',respuesta);
-            this.setUser(respuesta)
-          
+            console.log('Aquuuuiiiiiiiiiiiiiiii');
+            this.setUser(respuesta);
+            this.isAuthenticated = true;
             //console.log('Datos del usuario cargados:', respuesta.data)
           } else {
-            throw new Error('Respuesta inválida')
+            this.isAuthenticated = false;
+            localStorage.removeItem('token');
           }
         });
 
@@ -112,27 +112,64 @@ export const useAuthStore = defineStore('auth', {
        // console.error('Error al verificar token:', error)
         this.isAuthenticated = false
         this.user = null
+        localStorage.removeItem('access_token');
+        localStorage.removeItem('user');
+        localStorage.removeItem('isAuthenticated');
       }
+    },
+
+
+    async fetchUserData()
+    {
+      //obtengo el ide del usuario
+      const userData = localStorage.getItem('user');
+      if (userData) {
+         const user = JSON.parse(userData);
+         this.setUser(user);
+         this.user = user;
+         this.userId = user.id;
+          this.isAuthenticated = true;
+          await this.fetchUserPermissions();
+      }else
+      {
+        this.isAuthenticated = false;
+      }
+    },
+      async fetchUserPermissions() {
+        ///obtenga los permisos del usuario
+          console.log('Cargando permisos del usuario:', this.userId);
+        try {
+
+          const response = await $fetch(`http://127.0.0.1:8000/auth/get_role_user?user_id=${this.userId}`, {
+            method: 'GET',
+          });
+          this.permissions = response.permissions;
+
+          console.log('Permisos del usuario cargados:', this.permissions);
+        } catch (error) {
+          console.error('Error fetching user permissions:', error);
+        }
+      },
+
+    setUser(user) {
+      this.user = user;
+      localStorage.setItem('user', JSON.stringify(user));
     },
   },
 })
 
 // Función para inicializar el store
-// Función para inicializar el store
 async function initAuthStore() {
-  const storedToken = getTokenFromStorage();
-  const router = useRouter();
+  const authStore = useAuthStore();
+  const storedToken = localStorage.getItem('access_token');
 
   if (storedToken) {
-    useAuthStore().setToken(storedToken);
-    await useAuthStore().verifyToken();
+    authStore.token = storedToken;
+    await authStore.verifyToken();
   } else {
-    ///return navigateTo('/login')
-     router.push("/login");
-
-   //  console.log('Deberia de salir a y no poder al login del usuario');
+    authStore.isAuthenticated = false;
   }
 }
 
 // Inicializar el store cuando la aplicación inicie
-initAuthStore()
+initAuthStore();

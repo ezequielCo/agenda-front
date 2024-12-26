@@ -22,6 +22,10 @@
           </div>
           
           <div class="mb-4">
+         <NuxtLink to="/register">Registrarme</NuxtLink>
+
+          </div>
+          <div class="mb-4">
             <button
                       :class="{ 'disabled': isLoading }"
                       :disabled="isLoading"
@@ -82,16 +86,12 @@ const submitForm = async () => {
       }).then(response => {
         //console.log('Respuesta:', response);
       if (response.status === 200) {
-       // console.log('Respuesta:', response);
-       
+     
+     
         const token = response.data.access_token;
         localStorage.setItem('access_token', token);
-       // console.log(token);
         authStore.setToken(token);
-      
-        
-       // console.log('Redireccionando a /dashboard');
-       isLoading.value = false
+        isLoading.value = false
         router.push('/dashboard');
       }
     })

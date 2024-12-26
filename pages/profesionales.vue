@@ -23,7 +23,7 @@
       <div class="relative bg-gray-900 overflow-hidden">
         <div class="absolute inset-0">
           <img 
-            src="/assets/img/woman-doctor-banner.jpg" 
+            src="/assets/img/login-background.jpg" 
             alt="Doctora sonriente" 
             class="w-full h-full object-cover"
           />
@@ -31,7 +31,7 @@
         </div>
         <div class="relative max-w-7xl mx-auto py-24 px-4 sm:py-32 sm:px-6 lg:px-8">
           <h1 class="text-4xl font-extrabold tracking-tight text-white sm:text-5xl md:text-6xl">
-            <span class="block">Gestión Médica</span>
+            <span class="block">Profesionales</span>
             <span class="block text-blue-400">Eficiente y Profesional</span>
           </h1>
           <p class="mt-6 max-w-lg text-xl text-gray-300 sm:max-w-3xl">
@@ -50,55 +50,21 @@
       <!-- Features Section -->
       <div class="py-12 bg-white">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div class="lg:text-center">
+            <div class="lg:text-center">
             <h2 class="text-base text-blue-500 font-semibold tracking-wide uppercase">Características</h2>
             <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
               Una mejor manera de gestionar su práctica médica
             </p>
-          </div>
-
-          <div class="mt-10">
-            <dl class="space-y-10 md:space-y-0 md:grid md:grid-cols-2 md:gap-x-8 md:gap-y-10">
-              <div class="flex">
-                <div class="flex-shrink-0">
-                  <div class="flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
-                    <CalendarIcon class="h-6 w-6" />
-                  </div>
-                </div>
-                <div class="ml-4">
-                  <dt class="text-lg leading-6 font-medium text-gray-900">
-                    Gestión de Citas
-                  </dt>
-                  <dd class="mt-2 text-base text-gray-500">
-                    Organiza y administra fácilmente las citas de tus pacientes.
-                  </dd>
-                </div>
-              </div>
-
-              <div class="flex">
-                <div class="flex-shrink-0">
-                  <div class="flex items-center justify-center h-12 w-12 rounded-md bg-blue-500 text-white">
-                    <ClipboardIcon class="h-6 w-6" />
-                  </div>
-                </div>
-                <div class="ml-4">
-                  <dt class="text-lg leading-6 font-medium text-gray-900">
-                    Historias Clínicas Digitales
-                  </dt>
-                  <dd class="mt-2 text-base text-gray-500">
-                    Mantén registros médicos precisos y accesibles en todo momento.
-                  </dd>
-                </div>
-              </div>
-            </dl>
-          </div>
+            </div>
+           
         </div>
       </div>
  
-      <div class="py-12 bg-azul">
+      <div class="py-12 bg-blanco">
         <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-          </div>
-          </div>
+            <Buscador></Buscador>
+        </div>
+     </div>
     <!-- Footer -->
     
   </div>
@@ -106,9 +72,9 @@
 
 <script setup>
 definePageMeta({
-
    layout: 'auth'
 });
+
 
 import { CalendarIcon, ClipboardIcon, FacebookIcon, InstagramIcon, TwitterIcon } from 'lucide-vue-next'
 </script>

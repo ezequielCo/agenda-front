@@ -2,7 +2,7 @@
 <template>
      <div  id="app-layout" class="min-h-screen flex flex-col">
           <!-- Navbar -->
-          <nav class="bg-white shadow-md">
+          <nav class="bg-blanco shadow-md">
             <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
               <div class="flex justify-between h-16">
                 <div class="flex-shrink-0 flex items-center">
@@ -10,15 +10,70 @@
                   <img class="h-8 w-auto" src="/assets/img/logo.svg" alt="Logo" />
                 </div>
                 <div class="flex items-center">
-                <div v-if="!authStore.isAuthenticated">
-                        <button  @click="login" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">
+            <!-- Current: "bg-gray-900 text-white", Default: "text-gray-300 hover:bg-gray-700 hover:text-white" -->
+                    <a href="/" class="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium " aria-current="page">Inicio</a>
+                    <a href="/dashboard" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">dashboard</a>
+                    <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Projects</a>
+                    <a href="#" class="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-gray-700 hover:text-white">Calendar</a>
+                  </div>
+                <div class="flex items-center">
+                 <!----<div class="relative px-4  ">
+                        <button class=" text-gray-600 hover:text-gray-900 focus:outline-none focus:ring-2 focus:ring-gray-300 rounded-full">
+                          <ShoppingCart class="w-6 h-6" />
+                        </button>
+                        <span class="bg-azul absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white transform translate-x-1/2 -translate-y-1/2 bg-red-600 rounded-full">
+                          {{ itemCount }}
+                        </span>
+                  </div>-->
+                  
+                <div class="px-4" v-if="authStore.isAuthenticated == false">
+                        <button  @click="login" class="bg-azul hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">
                           Iniciar Sesión
                         </button>
                       </div>    
                   <div v-else>
-                    <button  @click="logout" class="bg-blue-500 hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">
-                         Desplegable botton 
+
+                    <Menu>
+                      <MenuButton  id="dropdownDefaultButton" data-dropdown-toggle="dropdown" class="text-white bg-azul hover:bg-blue-800   font-medium rounded text-sm px-5 py-4 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800" type="button"> 
+                      
+                        Options  <svg class="w-2.5 h-2.5 ms-3" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 10 6">
+                              <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="m1 1 4 4 4-4"/>
+                              </svg>
+                      </MenuButton>
+                      <transition
+                      enter-active-class="transition duration-100 ease-out"
+                      enter-from-class="transform scale-95 opacity-0"
+                      enter-to-class="transform scale-100 opacity-100"
+                      leave-active-class="transition duration-75 ease-out"
+                      leave-from-class="transform scale-100 opacity-100"
+                      leave-to-class="transform scale-95 opacity-0"
+                         >
+                      <MenuItems  class="bg-blanco  origin-top absolute z-50 mt-2 w-48 rounded-md shadow-lg py-1 bg-white ring-1 ring-black ring-opacity-5 focus:outline-none" aria-labelledby="dropdownDefaultButton">
+                        <!-- Use the `active` state to conditionally style the active item. -->
+                        <MenuItem
+                          v-for="link in links"
+                          :key="link.href"
+                          as="template"
+                          v-slot="{ active }"  class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600  dark:hover:text-white"
+                        >
+                          <a
+                            :href="link.href"
+                            :class="{ 'bg-azul text-white': active, 'bg-blancotext-black': !active }"
+                          >
+                            {{ link.label }}
+                          </a>
+                        </MenuItem> 
+                         <MenuItem>
+                          <button  @click="logout" class="  block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600  dark:hover:text-white">
+                             Cerrar
                         </button>
+                        </MenuItem>
+                      </MenuItems>
+                    </transition>
+                    </Menu>
+                   <!--<button  @click="logout" class="bg-azul hover:bg-blue-600 text-white font-bold py-2 px-4 rounded transition duration-300 ease-in-out">
+                         Desplegable botton 
+                        </button> -->
                   </div>
                 </div>
                 </div>
@@ -78,19 +133,16 @@
   
   <script setup>
   import { toast } from 'vue3-toastify';
+ import { Menu, MenuButton, MenuItems, MenuItem } from '@headlessui/vue'
 
-  import { useAuthStore } from '@/stores/auth';
-  import { ref, watch} from 'vue'
+  import { ref, onMounted} from 'vue'
   //import { useRouter } from 'vue'
-  import { HomeIcon, UsersIcon, FolderIcon, CalendarIcon, ChartBarIcon, CogIcon } from 'lucide-vue-next'
+  import { HomeIcon, UsersIcon, FolderIcon, CalendarIcon, ChartBarIcon, CogIcon ,ShoppingCart} from 'lucide-vue-next'
   
   const authStore = useAuthStore();
   const router = useRouter();
  // console.log('login dashboras',authStore.isAuthenticated);
-  definePageMeta({
-     middleware: ['auth'],
-     
-  });
+  
   // muestro mensaje de bienvenidad
   
 
@@ -102,12 +154,19 @@
   
 
   const login = () => {
-    //authStore.logout();
+    
     router.push('/login');
   };
   
+    const links = [
+      { href: '/account-settings', label: 'Account settings' },
+      { href: '/support', label: 'Support' },
+      { href: '/license', label: 'License' },
+      { href: '/sign-out', label: 'Sign out' },
+    ]
 
 
+    const itemCount = 3;
   ///console.log('mis valores locales', localStorage)
   // Escuchar cambios en el estado de autenticación
   /*watch(() => authStore.isAuthenticated, () => {
@@ -118,7 +177,7 @@
   }, { immediate: true })*/
   
   
-  
+ 
   //console.log('desde el layout',authStore.isAuthenticated)
   if(authStore.isAuthenticated = true){
     console.log('Se supodene que estoy actuvo y es true')
@@ -132,14 +191,17 @@
               position: toast.POSITION.TOP_RIGHT,
                 });
              });
-          
-        
+
   }
-  
-  // Ejecutar initAuthStore cuando el componente se monte
+
+  /*onMounted( async () => {
+    await  authStore.verifyToken();
+});*/
+ 
   onMounted(async () => {
-    await authStore.verifyToken()
+    await authStore.verifyToken();
+    await authStore.fetchUserData();
    
-  })
+  });
   </script>
   

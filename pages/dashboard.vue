@@ -32,7 +32,7 @@ const authStore = useAuthStore();
 const router = useRouter();
 
 definePageMeta({
-   middleware: ['auth'],
+   middleware: 'auth',
    layout: 'auth'
 
 });
@@ -54,6 +54,14 @@ const logout = () => {
   router.push('/login');
 };
 
+
+if(authStore.isAuthenticated = true){ 
+
+  console.log('Usuario id autenticad',localStorage.user);
+ 
+ 
+
+} 
 const modules = ref([
   { name: 'Inicio', icon: HomeIcon, description: 'Resumen general del sistema' },
   { name: 'Usuarios', icon: UsersIcon, description: 'Gestión de usuarios y permisos' },

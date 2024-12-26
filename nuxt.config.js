@@ -7,9 +7,9 @@ export default defineNuxtConfig({
   components: true,
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss', '@pinia/nuxt', 'nuxt-headlessui', 'nuxt-toastify'],
-  plugins: [
+ /* plugins: [
     { src: '@/plugins/pinia-plugin.js' }
-  ],
+  ],*/
   headlessui: {
     prefix: 'Headless'
   },
